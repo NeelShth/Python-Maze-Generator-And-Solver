@@ -3,9 +3,12 @@
 A Python program that builds a maze and then solves the path between 2 nodes, all visualised in Pygame. The current version supports 4 generation and solving algorithms. Mainly built to be modular to be implemented into other programs.
 
 ## 🛠️ Technologies
-
-+ Python
-+ Pygame
+```
+Python
+```
+```
+Pygame
+```
 
 ## ⚙️ Features
 Here's what you can do with this Maze Generator and Solver:
@@ -31,11 +34,11 @@ Here's what you can do with this Maze Generator and Solver:
 
 If you are on Python version < 3.12:
 ```
-+ pip install pygame
+pip install pygame
 ```
 Else (Python version => 3.12):
 ```
-+ pip install pygame-ce
+pip install pygame-ce
 ```
 
 > [!WARNING]
