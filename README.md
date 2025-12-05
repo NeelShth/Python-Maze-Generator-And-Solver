@@ -27,5 +27,16 @@ Here's what you can do with this Maze Generator and Solver:
 
 + **Test Function**: Example of how to use is provided at the bottom of the code.
 
+## ⚓ Requirements
+
+If you are on Python version < 3.12:
+```
++ pip install pygame
+```
+Else (Python version => 3.12):
+```
++ pip install pygame-ce
+```
+
 > [!WARNING]
-> Generation animation freezes above 14X14 maze size, generation will continue however. (fix coming in next update)
+> Generation animation freezes when user click out of pygame window, generation will continue however. (fix coming in next update)
