@@ -37,6 +37,3 @@ Else (Python version => 3.12):
 ```
 pip install pygame-ce
 ```
-
-> [!WARNING]
-> Generation animation freezes when user click out of pygame window, generation will continue however. (fix coming in next update)
