@@ -1,4 +1,6 @@
-#run "pip3 install requirements.txt" in cmd before running this
+#If on Python version < 3.11, run "pip install pygame"
+#Else, run "pip install pygame-ce"
+
 import pygame
 import random
 import heapq
@@ -11,9 +13,11 @@ CONTAINER_HEIGHT = 600
 
 #Maze Size
 
-#TODO - Fix Animation Of Maze Sizes > 14
-COLS = 14
-ROWS = 14
+#TODO - Fix animation when user clicks out of window (Complete - see Maze class)
+#---USE THIS TO CHANGE DIMENSTIONS---
+COLS = 20
+ROWS = 20
+#---
 
 #Scaled Node Size
 Node_SIZE = min(CONTAINER_WIDTH // COLS, CONTAINER_HEIGHT // ROWS)
@@ -87,6 +91,12 @@ class Node:
 #----------------------------------------------
 
 #---------------------Maze---------------------
+#Processes Window Events So Pygame Does Not Freeze
+def handle_events():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit(); exit()            
+
 class Maze:
     def __init__(self, start_coords=None, end_coords=None):
         self.grid = [[Node(x, y) for y in range(ROWS)] for x in range(COLS)]
@@ -94,6 +104,12 @@ class Maze:
         self.end = None
         if start_coords or end_coords:
             self.set_start_end(start_coords, end_coords)
+            
+    def step_draw(self, delay=10):
+        handle_events()
+        self.draw()
+        pygame.display.update()
+        pygame.time.delay(delay)
 
     def set_start_end(self, start_coords=None, end_coords=None):
         if start_coords:
@@ -152,7 +168,7 @@ class Maze:
             self.kruskal()
         elif method == "binary":
             self.binary_tree()
-
+            
     def backtracker(self):
         stack = [self.start]
         self.start.visited = True
@@ -168,9 +184,7 @@ class Maze:
             else:
                 stack.pop()
 
-            self.draw()
-            pygame.display.update()
-            pygame.time.delay(10)
+            self.step_draw()
 
     def prim(self):
         frontier = [self.start]
@@ -189,12 +203,11 @@ class Maze:
                 for _, n in self.neighbours(neighbour, only_unvisited=True):
                     edges.append((neighbour, n))
 
-            self.draw()
-            pygame.display.update()
-            pygame.time.delay(10)
+            self.step_draw()
 
     def kruskal(self):
         parent = {}
+
         def find(Node):
             while parent[Node] != Node:
                 parent[Node] = parent[parent[Node]]
@@ -202,10 +215,9 @@ class Maze:
             return Node
 
         def union(a, b):
-            root_a = find(a)
-            root_b = find(b)
-            if root_a != root_b:
-                parent[root_b] = root_a
+            ra, rb = find(a), find(b)
+            if ra != rb:
+                parent[rb] = ra
                 return True
             return False
 
@@ -228,9 +240,7 @@ class Maze:
             if union(a, b):
                 a.remove_wall(b)
 
-            self.draw()
-            pygame.display.update()
-            pygame.time.delay(10)
+            self.step_draw()
 
     def binary_tree(self):
         for x in range(COLS):
@@ -245,9 +255,7 @@ class Maze:
                     neighbour = random.choice(neighbours)
                     Node.remove_wall(neighbour)
 
-            self.draw()
-            pygame.display.update()
-            pygame.time.delay(10)
+                self.step_draw()
 
     def draw(self, path=None, open_set=None, closed_set=None):
         screen.fill(WHITE)
@@ -410,9 +418,11 @@ def test():
     
     #Initialise Maze
     maze = Maze()
+    
+    #---Uncomment the maze methods you want to use---
 
     #Random Start & Random End
-    #maze.randomize_start_end()
+    maze.randomize_start_end()
     
     #Custom Start & Random End
     #maze.set_start_end(start_coords=(0, 0))
@@ -420,13 +430,13 @@ def test():
 
     
     #Random Start & Custom End
-    maze.randomize_start()
-    maze.set_start_end(end_coords=(COLS-1, ROWS-1))
+    #maze.randomize_start()
+    #maze.set_start_end(end_coords=(COLS-1, ROWS-1))
 
     #Custom Start & Custom End
     #maze.set_start_end(start_coords=(0, 0), end_coords=(COLS - 1, ROWS - 1))
     
-    maze.generate_maze(method="prim") #Change to "backtracker", "prim", "binary", "kruskal"
+    maze.generate_maze(method="backtracker") #Change to "backtracker", "prim", "binary", "kruskal"
     maze.draw()
     pygame.display.update()
     
@@ -435,7 +445,7 @@ def test():
     start_time = time.time()
     
     solver = Pathfinder(maze)
-    solver.solve(method="djstrika") #Change to "djstrika", "bfs", "dfs","astar"
+    solver.solve(method="astar") #Change to "djstrika", "bfs", "dfs","astar"
     
     end_time = time.time() - start_time
     print(f"Solving Time: {end_time} seconds")
