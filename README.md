@@ -33,7 +33,7 @@ If you are on Python version < 3.12:
 ```
 pip install pygame
 ```
-Else (Python version => 3.12):
+Else (Python version >= 3.12):
 ```
 pip install pygame-ce
 ```
